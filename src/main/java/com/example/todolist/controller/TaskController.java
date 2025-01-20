@@ -38,4 +38,10 @@ public class TaskController {
     public String delete (@PathVariable Long id){
         return service.delete(id);
     }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Task uptdateTask(@PathVariable Long id,@RequestBody Task task){
+        return service.uptdateTask(id,task);
+    }
 }

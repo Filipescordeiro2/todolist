@@ -27,5 +27,21 @@ public class Task {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private LocalDateTime uptadeAt;
+
+    @PrePersist
+    public void prePersist(){
+        LocalDateTime current = LocalDateTime.now();
+        this.createdAt = current;
+        this.uptadeAt = current;
+    }
+
+    @PreUpdate
+    public void preUpdate(){
+        this.uptadeAt = LocalDateTime.now();
+    }
+
+
 
 }

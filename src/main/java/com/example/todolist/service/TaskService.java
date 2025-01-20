@@ -4,12 +4,10 @@ import com.example.todolist.model.Task;
 import com.example.todolist.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import netscape.javascript.JSObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 
 import static org.apache.logging.log4j.util.Strings.isEmpty;
 
@@ -24,7 +22,6 @@ public class TaskService {
         log.info("starting service inclusion ");
         try {
             ValidTitle(task.getTitle());
-            task.setCreatedAt(LocalDateTime.now());
             var taskSaved = repository.save(task);
             log.info("successful inclusion of the task "+taskSaved);
             return taskSaved;
@@ -79,11 +76,34 @@ public class TaskService {
         }
     }
 
+    public Task uptdateTask(Long id,Task task){
+        try{
+            ValidTitle(task.getTitle());
+            var taskUpdate = uptade(id,task);
+            repository.save(taskUpdate);
+            log.info("successful update of the task "+taskUpdate);
+            return taskUpdate;
+        }catch (RuntimeException e){
+            throw new RuntimeException(e);
+        }
+        catch (Exception e){
+            throw new RuntimeException("Error for update of task");
+        }
+    }
+
+    private Task uptade(Long id,Task task){
+        var taskExist = validExistTask(id);
+        taskExist.setTitle(task.getTitle());
+        taskExist.setDescription(task.getDescription());
+        taskExist.setCompleted(task.getCompleted());
+            return taskExist;
+    }
 
     private Task validExistTask(Long id){
         return repository.findById(id)
                 .orElseThrow(()->new RuntimeException("Task not found"));
     }
+
 
     private void ValidTitle (String title){
         if (isEmpty(title)){
